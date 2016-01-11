@@ -3,26 +3,15 @@
 	Zoho API core functions.
 
 """
-import requests
+from xml import etree
+from xml.etree.ElementTree import Element, tostring, fromstring, SubElement
 
-try:
-	from xml import etree
-	from xml.etree.ElementTree import Element, tostring, fromstring, SubElement
-except ImportError:
-	try:
-		from lxml import etree
-		from lxml.etree import Element, tostring, fromstring, SubElement
-	except ImportError:
-		raise RuntimeError("XML library not available:  no etree, no lxml")
+import requests
 
 class ZohoException(Exception):
 	pass
 
 class Properties(object):
-
-	def __init__(self, **kwargs):
-		self.tokenURL = "https://accounts.zoho.com/apiauthtoken/nb/create?SCOPE={scope}&EMAIL_ID={user}&PASSWORD={password}&DISPLAY_NAME={app_name}"
-		self.crm_insert_url = "https://crm.zoho.com/crm/private/json/{module}/insertRecords?authtoken={authToken}&scope={scope}&newFormat=1&xmlData={xmlData}"
 	
 	# Set properties
 	@property
@@ -101,6 +90,9 @@ class Connection(Properties):
 	def __init__(self, **kwargs):
 		for key,value in kwargs.items():
 			setattr(self, key, value)
+
+		self.tokenURL = "https://accounts.zoho.com/apiauthtoken/nb/create?SCOPE={scope}&EMAIL_ID={user}&PASSWORD={password}&DISPLAY_NAME={app_name}"
+
 		super(Connection, self).__init__()
 
 
@@ -136,31 +128,18 @@ class Connection(Properties):
 	def prepare_xml_request(self, module, leads):
 		root = Element(module)
 		
-		# Row counter
 		no = 1
 		for lead in leads:
 			row = Element("row", no=str(no))
 			root.append(row)
-			
-			assert type(lead) == dict, "Leads must be dictionaries inside a list, got:" + str(type(lead))
-			
-			for key, value in lead.items():
-				# <FL val="Lead Source">Web Download</FL>
-				# <FL val="First Name">contacto 1</FL>
-				fl = Element("FL", val=key)
-				if type(value) == dict: # If it's an attached module, accept multiple groups
-					mod_attach_no = 1
-					for module_key, module_value in value.items(): # The first group defines the module name, yank that and iterate through the contents
-						for mod_item in module_value:
-							mod_fl = SubElement(fl, module_key, no=str(mod_attach_no))
-							for mod_item_key, mod_item_value in mod_item.items():
-								attach_fl = SubElement(mod_fl, "FL", val=mod_item_key)
-								attach_fl.text = mod_item_value
-							mod_attach_no += 1
-				elif type(value) != str:
-					fl.text = str(value)
-				else:
-					fl.text = value
-				row.append(fl)
-			no += 1
+			if type(lead) == dict:			
+				for key, value in lead.items():
+					fl = Element("FL", val=key)
+					if type(value) != str:
+						fl.text = str(value)
+					else:
+						fl.text = value
+					row.append(fl)
+				no += 1
+
 		return tostring(root)
