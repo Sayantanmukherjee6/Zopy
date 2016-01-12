@@ -22,8 +22,6 @@ setup(name='Zopy',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
           'requests'
       ],
       entry_points="""
