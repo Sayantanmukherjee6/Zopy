@@ -95,8 +95,24 @@ class Connection(Properties):
 
 		super(Connection, self).__init__()
 
+	def _valid_mandatory_fields(self, authToken=None, scope=None, module=None):
 
-	def _validation(self):
+		if authToken is not None:
+			self.authToken = authToken
+		elif authToken is None and self.authToken is None:
+			raise ZohoException("You have to assing an authToken")
+
+		if scope is not None:
+			self.scope = scope
+		elif scope is None and self.scope is None:
+			raise ZohoException("You have to assing a scope")
+
+		if module is not None:
+			self.module = module
+		elif module is None and self.module is None:
+			raise ZohoException("You have to assing a module")
+
+	def _valid_data_login(self):
 		if self.user == None:
 			raise AttributeError("You need to set a Username/EmailID")
 		elif self.password == None:
@@ -106,7 +122,7 @@ class Connection(Properties):
 
 	def createAuthToken(self):
 		try:
-			self._validation()
+			self._valid_data_login()
 		except AttributeError as e:
 			raise e
 		else:
@@ -125,7 +141,7 @@ class Connection(Properties):
 			self.authToken = zoho_authToken
 		return zoho_authToken
 
-	def prepare_xml_request(self, module, leads):
+	def prepare_xml(self, module, leads):
 		root = Element(module)
 		
 		no = 1
