@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from responseModel import ZohoResponse
 
 from xml import etree
 from xml.etree.ElementTree import Element, tostring, fromstring, SubElement
@@ -140,8 +141,7 @@ class Connection(Properties):
 		return zoho_authToken
 
 	def prepare_xml(self, module, leads):
-		root = Element(module)
-		
+		root = Element(module)		
 		no = 1
 		for lead in leads:
 			row = Element("row", no=str(no))
@@ -157,3 +157,21 @@ class Connection(Properties):
 				no += 1
 
 		return tostring(root)
+
+	def _options_to_params(self, authToken=None, scope=None, xml=[], options={}):
+		params_string = "authtoken={}&scope={}&".format(authToken,scope)
+		for k,v in options.items():
+			params_string += "{}={}&".format(k,v)
+		if xml:
+			params_string += "xmlData={}".format(xml)
+		else:
+			params_string = params_string[:-1]
+		return params_string
+
+	def _getPost(self, module=None ,xml=None, action=None, options={}):
+		params = self._options_to_params(authToken=self.authToken,
+			scope=self.scope, xml=xml, options=options)
+
+		url = self.url.format(module=module,action=action,params=params)
+		response_json = requests.get(url).json()
+		return ZohoResponse(many=False).dump(response_json.get('response')).data
