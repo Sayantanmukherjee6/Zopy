@@ -1,8 +1,6 @@
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-	Zoho CRM API bridge.
-
-"""
 import requests
 from core import Connection, ZohoException
 

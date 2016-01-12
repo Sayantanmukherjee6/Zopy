@@ -1,8 +1,6 @@
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-	Zoho API core functions.
-
-"""
 from xml import etree
 from xml.etree.ElementTree import Element, tostring, fromstring, SubElement
 
