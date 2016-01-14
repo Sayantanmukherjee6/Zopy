@@ -9,8 +9,6 @@ class CRM(Connection):
 	def __init__(self, **kwargs):
 		for key,value in kwargs.items():
 			setattr(self, key, value)
-
-		self.url = "https://crm.zoho.com/crm/private/json/{module}/{action}?{params}"
 		super(CRM, self).__init__()
 
 	""" To retrieve data by the owner of the Authentication Token specified in the API request """
@@ -26,6 +24,6 @@ class CRM(Connection):
 	def insertRecords(self, xmlData=[], module=None, **options):
 		action = "insertRecords"
 		xml = self.prepare_xml(module=module, leads=xmlData)
-		
+		print xml
 		return self._getPost( module=module ,xml=xml, 
 			action=action, options=options)

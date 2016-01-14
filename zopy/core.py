@@ -91,7 +91,8 @@ class Connection(Properties):
 			setattr(self, key, value)
 
 		self.tokenURL = "https://accounts.zoho.com/apiauthtoken/nb/create?SCOPE={scope}&EMAIL_ID={user}&PASSWORD={password}&DISPLAY_NAME={app_name}"
-
+		self.url = "https://crm.zoho.com/crm/private/json/{module}/{action}?{params}"
+		
 		super(Connection, self).__init__()
 
 	def _valid_mandatory_fields(self, authToken=None, scope=None, module=None):
@@ -148,15 +149,15 @@ class Connection(Properties):
 			root.append(row)
 			if type(lead) == dict:			
 				for key, value in lead.items():
-					fl = Element("FL", val=key)
+					fl = Element("FL", val=key.decode("utf-8"))
 					if type(value) != str:
 						fl.text = str(value)
 					else:
-						fl.text = value
+						fl.text = value.decode("utf-8")
 					row.append(fl)
 				no += 1
 
-		return tostring(root)
+		return tostring(root, encoding='UTF-8')
 
 	def _options_to_params(self, authToken=None, scope=None, xml=[], options={}):
 		params_string = "authtoken={}&scope={}&".format(authToken,scope)
