@@ -24,6 +24,5 @@ class CRM(Connection):
 	def insertRecords(self, xmlData=[], module=None, **options):
 		action = "insertRecords"
 		xml = self.prepare_xml(module=module, leads=xmlData)
-		print xml
 		return self._getPost( module=module ,xml=xml, 
 			action=action, options=options)
