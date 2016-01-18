@@ -38,8 +38,14 @@ class CRM(Connection):
 		criteria_str += ")"
 
 		options.update({"criteria":criteria_str})
-		params = self._options_to_params(authToken=self.authToken,
-			scope=self.scope, options=options)
 
 		return self._getPost( module=module, 
+			action=action, options=options)
+
+	def updateRecords(self, module=None, id=None, xmlData=None, **options):
+		action="updateRecords"
+		options.update({"id":id})
+
+		xml = self.prepare_xml(module=module, leads=xmlData)
+		return self._getPost( module=module ,xml=xml, 
 			action=action, options=options)
