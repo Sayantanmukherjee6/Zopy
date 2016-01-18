@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
-from core import Connection
+from core import (Connection,ZohoException)
 
 class CRM(Connection):
 
@@ -25,4 +25,21 @@ class CRM(Connection):
 		action = "insertRecords"
 		xml = self.prepare_xml(module=module, leads=xmlData)
 		return self._getPost( module=module ,xml=xml, 
+			action=action, options=options)
+
+	def searchRecords(self, module=None, criteria={}, **options):
+		action="searchRecords"
+		if not criteria or type(criteria) is not dict:
+			raise ZohoException("You must set a valid criteria dictionary")
+
+		criteria_str = "("
+		for k,v in criteria.items():
+			criteria_str += "{}:{}".format(k,v)
+		criteria_str += ")"
+
+		options.update({"criteria":criteria_str})
+		params = self._options_to_params(authToken=self.authToken,
+			scope=self.scope, options=options)
+
+		return self._getPost( module=module, 
 			action=action, options=options)

@@ -161,12 +161,24 @@ class Connection(Properties):
 
 	def _options_to_params(self, authToken=None, scope=None, xml=[], options={}):
 		params_string = "authtoken={}&scope={}&".format(authToken,scope)
+		
 		for k,v in options.items():
-			params_string += "{}={}&".format(k,v)
+			
+			if type(v) is list:
+				params_string += "{}={}(".format(k,self.module)
+				for i in v:
+					params_string += i
+				params_string = params_string[:-1]
+				params_string += ")&"
+
+			else:	
+				params_string += "{}={}&".format(k,v)
+
 		if xml:
 			params_string += "xmlData={}".format(xml)
 		else:
 			params_string = params_string[:-1]
+		
 		return params_string
 
 	def _getPost(self, module=None ,xml=None, action=None, options={}):
