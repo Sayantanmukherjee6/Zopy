@@ -185,7 +185,6 @@ class Connection(Properties):
 		params = self._options_to_params(authToken=self.authToken,
 			scope=self.scope, xml=xml, options=options)
 
-		url = self.url.format(module=module,action=action,params=params)
-		print url
+		url = self.url.format(module=module,action=action,params=params)		
 		response_json = requests.get(url).json()
 		return ZohoResponse(many=False).dump(response_json.get('response')).data
