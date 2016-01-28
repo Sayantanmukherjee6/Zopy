@@ -154,7 +154,7 @@ class Connection(Properties):
 						if type(value) in [int,float]:
 							fl.text = str(value)
 						else:
-							fl.text = value.encode("utf-8")
+							fl.text = value
 					else:
 						fl.text = value.decode("utf-8")
 					row.append(fl)
