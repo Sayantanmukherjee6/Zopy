@@ -151,7 +151,10 @@ class Connection(Properties):
 				for key, value in lead.items():
 					fl = Element("FL", val=key.decode("utf-8"))
 					if type(value) != str:
-						fl.text = str(value.decode("utf-8"))
+						if type(vale) not in (int,float):
+							fl.text = str(value)
+						else:
+							fl.text = str(value.decode("utf-8"))
 					else:
 						fl.text = value.decode("utf-8")
 					row.append(fl)
