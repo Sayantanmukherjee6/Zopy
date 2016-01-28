@@ -49,34 +49,3 @@ class CRM(Connection):
 		xml = self.prepare_xml(module=module, leads=xmlData)
 		return self._getPost( module=module ,xml=xml, 
 			action=action, options=options)
-
-
-
-authToken = "70148d40da6dae9d6e7d98bff0d3a6fb"
-crm = CRM(authToken=authToken,scope="ZohoCRM/crmapi")
-
-def save_lead_crm(data, baseid, cc_product_id):
-	contact_information = {"CustomModule3 Name": data.get('email'),
-		"Nombres":data.get('name'),
-		"Teléfono celular" : data.get('phone'),
-		"Baseid": baseid,
-		"Ingresos": data.get('income'),
-		"Gastos": data.get('spend_financial'),
-		"La mejor tarjeta de crédito": cc_product_id
-		}
-
-	insert = crm.insertRecords(module="CustomModule3",xmlData=[contact_information],version=2,duplicateCheck=1)
-	lead_id = ""
-	if insert.has_key("result"):
-		for row in insert['result']['recorddetail']['FL']:
-			if row.get('val') == "Id":
-				lead_id = row.get('content')
-				break
-	else:
-		lead_id, contact_information = False
-
-	return insert,lead_id, contact_information
-
-insert,lead_id, data = save_lead_crm({'late_payment': u'1', 'name': u'aar\xf3n', 'phone': u'1234567890', 'user_type': 6, 'why_you_want_it': u'12', 'employment_time': u'12', 'why_you_want_it_sub': u'13', 'income': 20000, 'other_credits': u'0', 'spend_financial': u'2000', 'email': u'dhararon@hotmail.com'},
-	"2e8f5619-c5d9-11e5-8b35-68a86d4d53f4",
-	"La Tarjeta de Crédito Básica")
