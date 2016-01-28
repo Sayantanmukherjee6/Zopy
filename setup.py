@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1.18'
+version = '0.1.19'
 
 setup(name='Zopy',
       version=version,
