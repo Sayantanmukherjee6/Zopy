@@ -9,7 +9,7 @@ version = '0.2.0'
 setup(name='Zopy',
       version=version,
       description="Zoho API integration for Python",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.md").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
