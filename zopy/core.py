@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from responseModel import ZohoResponse
+from schemas import ZohoResponse
 
 from xml import etree
 from xml.etree.ElementTree import Element, tostring, fromstring, SubElement
@@ -120,6 +120,36 @@ class Connection(Properties):
 		elif self.app_name == None:
 			raise AttributeError("You need to set an ApplicationName")
 
+	def _options_to_params(self, authToken=None, scope=None, xml=[], options={}):
+		params_string = "authtoken={}&scope={}&".format(authToken,scope)
+		
+		for k,v in options.items():
+			
+			if type(v) is list:
+				params_string += "{}={}(".format(k,self.module)
+				for i in v:
+					params_string += i
+				params_string = params_string[:-1]
+				params_string += ")&"
+
+			else:	
+				params_string += "{}={}&".format(k,v)
+
+		if xml:
+			params_string += "xmlData={}".format(xml)
+		else:
+			params_string = params_string[:-1]
+		
+		return params_string
+
+	def _getPost(self, module=None ,xml=None, action=None, options={}):
+		params = self._options_to_params(authToken=self.authToken,
+			scope=self.scope, xml=xml, options=options)
+
+		url = self.url.format(module=module,action=action,params=params)		
+		response_json = requests.get(url).json()
+		return ZohoResponse(many=False).load(response_json.get('response')).data
+	
 	def createAuthToken(self):
 		try:
 			self._valid_data_login()
@@ -161,33 +191,3 @@ class Connection(Properties):
 				no += 1
 
 		return tostring(root, encoding='UTF-8')
-
-	def _options_to_params(self, authToken=None, scope=None, xml=[], options={}):
-		params_string = "authtoken={}&scope={}&".format(authToken,scope)
-		
-		for k,v in options.items():
-			
-			if type(v) is list:
-				params_string += "{}={}(".format(k,self.module)
-				for i in v:
-					params_string += i
-				params_string = params_string[:-1]
-				params_string += ")&"
-
-			else:	
-				params_string += "{}={}&".format(k,v)
-
-		if xml:
-			params_string += "xmlData={}".format(xml)
-		else:
-			params_string = params_string[:-1]
-		
-		return params_string
-
-	def _getPost(self, module=None ,xml=None, action=None, options={}):
-		params = self._options_to_params(authToken=self.authToken,
-			scope=self.scope, xml=xml, options=options)
-
-		url = self.url.format(module=module,action=action,params=params)		
-		response_json = requests.get(url).json()
-		return ZohoResponse(many=False).dump(response_json.get('response')).data
