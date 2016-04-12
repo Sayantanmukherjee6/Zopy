@@ -1,3 +1,17 @@
+# Packages
+*.egg
+*.egg-info
+.eggs
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
 *.pyc
 *.pyo
 *.mo
@@ -5,6 +19,7 @@
 *.egg
 *.EGG
 *.EGG-INFO
+.pypirc
 bin
 build
 downloads/*

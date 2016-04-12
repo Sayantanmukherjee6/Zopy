@@ -1,34 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
-import os
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-version = '0.2.0'
+from version import __version__
 
-setup(name='Zopy',
-      version=version,
-      description="Zoho API integration for Python",
-      long_description=open("README.md").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[
-        "Programming Language :: Python",
-        ],
-      keywords='Zoho API Developers CRM',
-      author='Dharwin Perez',
-      author_email='dhararon@hotmail.com',
-      url='https://github.com/dhararon/zopy',
-      license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['zopy'],
-      include_package_data=True,
-      zip_safe=False,
-      install_requires=[
-          'requests',
-          'marshmallow'
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
-      )
+setup(
+  name = 'zopy',
+  packages = ['zopy'],
+  version = '.'.join(str(x) for x in __version__),
+  description = "Zoho API integration for Python",
+  author = 'Dharwin Perez',
+  author_email = 'dhararon@hotmail.com',
+  url = 'https://github.com/dhararon/zopy',
+  download_url = 'https://github.com/dhararon/Zopy/tarball/master',
+  keywords = ['crm', 'CRM', 'zoho'],
+  classifiers=[],
+  license='MIT license',
+  install_requires=[
+    'requests',
+    'marshmallow'
+  ],
+)
