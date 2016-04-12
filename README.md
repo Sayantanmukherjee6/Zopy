@@ -8,7 +8,9 @@ Installation:
 --
 Install using `pip`...
 
-  pip install -e git+git@github.com:dhararon/Zopy.git#egg=Zopy-master
+  pip install zopy
+  or
+  easy_install zopy
 
 Example
 --
