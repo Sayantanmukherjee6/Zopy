@@ -6,7 +6,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from version import __version__
+__version__ = (0, 2, 2)
 
 setup(
   name = 'zopy',
