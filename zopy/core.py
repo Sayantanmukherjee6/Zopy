@@ -172,22 +172,19 @@ class Connection(Properties):
 		return zoho_authToken
 
 	def prepare_xml(self, module, leads):
-		root = Element(module)		
-		no = 1
-		for lead in leads:
-			row = Element("row", no=str(no))
-			root.append(row)
-			if type(lead) == dict:			
-				for key, value in lead.items():
+		root = Element(module)
+		for i, lead in enumerate(leads):
+			row = Element("row", no=str(i+1))
+			if type(lead) == dict:
+				for key,value in lead.items():
 					fl = Element("FL", val=key.decode("utf-8"))
 					if type(value) != str:
-						try:
-							fl.text = str(value)
-						except:
-							fl.text = ""
+						if value.is_digit():
+							fl.text = int(value)
+						else:
+							fl.text = value
 					else:
 						fl.text = value.decode("utf-8")
 					row.append(fl)
-				no += 1
-
+			root.append(row)
 		return tostring(root, encoding='UTF-8')
