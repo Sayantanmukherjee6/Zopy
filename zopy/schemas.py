@@ -65,4 +65,5 @@ class ZohoResponse(Schema):
 	@post_load(pass_many=False)
 	def convert_to_obj(self, data):
 		obj_to_response = ZohoResponseObject(data=data)
+		setattr(obj_to_response, 'data', data)
 		return obj_to_response
