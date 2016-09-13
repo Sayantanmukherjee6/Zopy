@@ -179,12 +179,12 @@ class Connection(Properties):
 				for key,value in lead.items():
 					fl = Element("FL", val=key.decode("utf-8"))
 					if type(value) != str:
+						fl.text = value
+					else:
 						if value.is_digit():
 							fl.text = int(value)
 						else:
-							fl.text = value
-					else:
-						fl.text = value.decode("utf-8")
+							fl.text = value.decode("utf-8")
 					row.append(fl)
 			root.append(row)
 		return tostring(root, encoding='UTF-8')
