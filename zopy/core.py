@@ -148,6 +148,7 @@ class Connection(Properties):
 
 		url = self.url.format(module=module,action=action,params=params)		
 		response_json = requests.get(url).json()
+
 		return ZohoResponse(many=False).load(response_json.get('response')).data
 	
 	def createAuthToken(self):
@@ -178,13 +179,13 @@ class Connection(Properties):
 			if type(lead) == dict:
 				for key,value in lead.items():
 					fl = Element("FL", val=key.decode("utf-8"))
-					if type(value) != str:
-						fl.text = value
-					else:
-						if value.is_digit():
+					if type(value) == str:
+						if value.isdigit():
 							fl.text = int(value)
 						else:
 							fl.text = value.decode("utf-8")
+					else:
+						fl.text = value
 					row.append(fl)
 			root.append(row)
 		return tostring(root, encoding='UTF-8')
