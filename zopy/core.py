@@ -144,10 +144,11 @@ class Connection(Properties):
 
 	def _getPost(self, module=None ,xml=None, action=None, options={}):
 		params = self._options_to_params(authToken=self.authToken,
-			scope=self.scope, xml=xml, options=options)
+			scope=self.scope,options=options)
 
-		url = self.url.format(module=module,action=action,params=params)		
-		response_json = requests.get(url).json()
+		url = self.url.format(module=module,action=action,params=params)
+
+		response_json = requests.post(url, data={'xmlData': xml}).json()
 
 		return ZohoResponse(many=False).load(response_json.get('response')).data
 	
@@ -188,4 +189,6 @@ class Connection(Properties):
 						fl.text = value
 					row.append(fl)
 			root.append(row)
-		return tostring(root, encoding='UTF-8')
+
+		response = tostring(root, encoding='UTF-8').replace('\n','').replace('\r','')
+		return response
