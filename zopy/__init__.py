@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding: utf8
 
 # See http://peak.telecommunity.com/DevCenter/setuptools#namespace-packages
 try:
